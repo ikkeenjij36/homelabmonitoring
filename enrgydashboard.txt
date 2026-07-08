@@ -1,0 +1,106 @@
+title: Energie
+
+views:
+
+  - title: Energie
+    path: energie
+    icon: mdi:lightning-bolt
+
+    cards:
+
+###############################################################################
+# OVERZICHT
+###############################################################################
+
+      - type: vertical-stack
+        cards:
+
+          - type: entities
+            title: Energie Overzicht
+
+            entities:
+              - entity: sensor.huidig_stroomverbruik_v4
+                name: Huidig Verbruik
+
+              - entity: sensor.kosten_per_uur_v4
+                name: Kosten per uur
+
+              - entity: sensor.stroomprijs_actueel_v4
+                name: Stroomprijs
+
+###############################################################################
+# AIRCO
+###############################################################################
+
+          - type: entities
+            title: Airco
+
+            entities:
+              - entity: sensor.airco_vermogen_v4
+                name: Vermogen
+
+              - entity: sensor.airco_verbruik_v4
+                name: Verbruik totaal
+
+              - entity: sensor.airco_dag_v4
+                name: Vandaag
+
+              - entity: sensor.airco_maand_v4
+                name: Deze maand
+
+###############################################################################
+# SERVERS
+###############################################################################
+
+          - type: entities
+            title: Servers
+
+            entities:
+              - entity: switch.energy_socket
+                name: Servers
+
+              - entity: sensor.energy_socket_vermogen
+                name: Server Vermogen
+
+###############################################################################
+# AUDIO VIDEO
+###############################################################################
+
+          - type: entities
+            title: Audio & Video
+
+            entities:
+              - entity: switch.energy_socket_2
+                name: Audio & Video
+
+              - entity: sensor.energy_socket_vermogen_2
+                name: Audio & Video Vermogen
+
+###############################################################################
+# GRAFIEK
+###############################################################################
+
+      - type: custom:mini-graph-card
+
+        name: Verbruik 24 uur
+
+        entities:
+          - sensor.huidig_stroomverbruik_v4
+
+        hours_to_show: 24
+        points_per_hour: 2
+        line_width: 3
+        show:
+          fill: true
+
+###############################################################################
+# P1
+###############################################################################
+
+      - type: entities
+        title: P1 Meter
+
+        entities:
+          - sensor.p1_meter_energie_import_tarief_1
+          - sensor.p1_meter_energie_import_tarief_2
+          - sensor.p1_meter_tarief

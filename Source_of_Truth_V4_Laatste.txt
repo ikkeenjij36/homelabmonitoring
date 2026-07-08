@@ -1,0 +1,135 @@
+HOME ASSISTANT / HOMELAB - SOURCE OF TRUTH (Laatste bekende versie)
+
+Laatst bijgewerkt vanuit gesprekgeheugen: juli 2026.
+
+1. Omgeving
+
+Xpenology
+
+-   HP DL380 Gen9
+-   ARC Loader
+-   DSM DS3622xs+
+-   Docker Container Manager
+-   MariaDB + phpMyAdmin
+-   Sonarr
+-   Radarr
+-   Prowlarr
+-   SABnzbd
+-   Headphones
+-   Spotweb
+-   Kodi database in MariaDB
+
+Proxmox
+
+-   Supermicro server
+-   Backupdoel voor Xpenology
+-   Testomgeving voor Home Assistant
+-   ZFS dataset voor backups
+
+Netwerk
+
+-   UCG Max
+-   10Gb backbone
+-   2.5Gb verbindingen
+-   UniFi Protect
+-   G5 Turret
+-   Protect Doorbell
+
+2. Home Assistant V4
+
+Dit is de enige geldige basis.
+
+Geen V1/V2/V3/V7/V8 configuraties opnieuw gebruiken.
+
+Alle YAML wordt gebouwd vanuit bevestigde entities.
+
+3. Climate
+
+Primaire climate-entiteiten:
+
+-   climate.woonkamer
+-   climate.slaapkamer_eric
+-   climate.gang
+-   climate.douche
+-   climate.kastenkamer
+
+Airco:
+
+-   climate.climacontrol_airco_woonkamer_climate
+-   climate.climacontrol_airco_slaapkamer_climate
+
+Voorkeuren:
+
+Woonkamer - Comfort 22°C - Koelen boven 22.5°C - Stop rond 21.9°C -
+Daarna fan_only of uit
+
+Slaapkamer - Overdag 21°C - Nacht 18°C
+
+Vorstbeveiliging - Onder 16°C verwarmen
+
+Manual override: - input_boolean.climate_manual_override_v4
+
+Presence: - binary_sensor.eric_thuis_v4
+
+4. Lighting
+
+Primaire lampen
+
+-   light.woonkamer_woonkamer
+-   light.keuken_keuken
+-   light.eethoek_eethoek
+-   light.zitgedeelte_staande_lamp_2
+
+Geen verlichting tijdens Shield/Kodi.
+
+5. Servers
+
+Sensoren
+
+-   binary_sensor.xpenology_online_v4
+-   binary_sensor.proxmox_online_v4
+
+Vermogen
+
+-   sensor.servers_vermogen_v4
+-   sensor.audio_video_vermogen_v4
+
+6. Backup
+
+Backup van
+
+-   apps-configs
+-   docker projecten
+-   MariaDB
+-   configuraties
+-   ARC configuratie
+
+Geen media.
+
+Bestemming: Proxmox ZFS dataset.
+
+7. MQTT
+
+Broker draait op VM.
+
+Airco woonkamer en slaapkamer gebruiken MQTT broker.
+
+8. Dashboards
+
+-   Climate
+-   Servers
+-   Backup
+-   Tado
+
+9. Regels
+
+-   Alleen complete YAML
+-   Geen gedeeltelijke snippets
+-   Geen legacy entities gebruiken
+-   Altijd werken vanuit bevestigde entities
+-   V4 is de enige geldige configuratie
+
+10. Toekomst
+
+Nieuwe uitbreidingen worden toegevoegd aan deze Source of Truth zodat
+alle toekomstige configuraties hiervan uitgaan.

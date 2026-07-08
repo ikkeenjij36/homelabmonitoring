@@ -1,0 +1,47 @@
+
+▼
+Select trigger platform
+Trigger platforms
+▼
+*
+Events
+sensor.example
+Search entity
+▼
+192.168.1.183 (binary_sensor.192_168_1_183)
+Entities
+▼
+Select condition
+Conditions
+▼
+ai_task.generate_data
+Services
+/homeassistant/configuration.yaml
+check_circle
+homeassistant:
+
+
+ edit
+/homeassistant
+Editor Settings
+
+12
+Font Size
+▼
+ace
+Keyboard Handler
+▼
+yaml
+Mode
+▼
+Auto
+New Line Mode
+2
+Scroll Speed
+4
+Tab Size
+▼
+Chrome
+Theme
+80
+Wrap LimitAce Editor 1.4.8

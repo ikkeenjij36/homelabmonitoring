@@ -1,0 +1,258 @@
+###############################################################################
+# 02_ENERGY_V4
+###############################################################################
+
+template:
+
+  - sensor:
+
+###############################################################################
+# AIRCO
+###############################################################################
+
+      - name: Airco Vermogen V4
+        unique_id: airco_vermogen_v4
+        unit_of_measurement: W
+        device_class: power
+        state_class: measurement
+        state: >
+          {{
+            states('sensor.climacontrol_airco_woonkamer_stroom')|float(0)
+            +
+            states('sensor.climacontrol_airco_slaapkamer_stroom')|float(0)
+          }}
+
+      - name: Airco Verbruik V4
+        unique_id: airco_verbruik_v4
+        unit_of_measurement: kWh
+        device_class: energy
+        state_class: total_increasing
+        state: >
+          {{
+            states('sensor.climacontrol_airco_woonkamer_verbruik')|float(0)
+            +
+            states('sensor.climacontrol_airco_slaapkamer_verbruik')|float(0)
+          }}
+
+###############################################################################
+# SERVERS
+###############################################################################
+
+      - name: Servers Vermogen V4
+        unique_id: servers_vermogen_v4
+        unit_of_measurement: W
+        device_class: power
+        state_class: measurement
+        state: >
+          {{ states('sensor.energy_socket_vermogen')|float(0) }}
+
+      - name: Audio Video Vermogen V4
+        unique_id: audio_video_vermogen_v4
+        unit_of_measurement: W
+        device_class: power
+        state_class: measurement
+        state: >
+          {{ states('sensor.energy_socket_vermogen_2')|float(0) }}
+
+###############################################################################
+# VERMOGENS
+###############################################################################
+
+      - name: Huidig Stroomverbruik V4
+        unique_id: huidig_stroomverbruik_v4
+        unit_of_measurement: W
+        device_class: power
+        state_class: measurement
+        state: >
+          {{
+            states('sensor.energy_socket_vermogen')|float(0)
+            +
+            states('sensor.energy_socket_vermogen_2')|float(0)
+            +
+            states('sensor.climacontrol_airco_woonkamer_stroom')|float(0)
+            +
+            states('sensor.climacontrol_airco_slaapkamer_stroom')|float(0)
+          }}
+
+###############################################################################
+# TARIEF
+###############################################################################
+
+      - name: Stroomprijs Actueel V4
+        unique_id: stroomprijs_actueel_v4
+        unit_of_measurement: EUR/kWh
+        state: >
+          {% if is_state('sensor.p1_meter_tarief','1') %}
+            0.26779
+          {% else %}
+            0.22071
+          {% endif %}
+
+###############################################################################
+# COP / VERWARMING
+###############################################################################
+
+      - name: COP V4
+        unique_id: cop_v4
+        unit_of_measurement: COP
+        state: >
+          {% set buiten = states('sensor.openweathermap_temperature')|float(10) %}
+
+          {% if buiten >= 15 %}
+            5.0
+          {% elif buiten >= 10 %}
+            4.5
+          {% elif buiten >= 5 %}
+            4.0
+          {% elif buiten >= 0 %}
+            3.5
+          {% else %}
+            3.0
+          {% endif %}
+          
+      - name: Warmteprijs Airco V4
+        unique_id: warmteprijs_airco_v4
+        unit_of_measurement: EUR/kWh_warmte
+        state: >
+          {{
+            (
+              states('sensor.stroomprijs_actueel_v4')|float(0)
+              /
+              states('sensor.cop_v4')|float(4.5)
+            )
+            | round(3)
+          }}
+
+      - name: Warmteprijs Gas V4
+        unique_id: warmteprijs_gas_v4
+        unit_of_measurement: EUR/kWh_warmte
+        state: >
+          {{
+            (
+              1.24968
+              /
+              9.77
+            )
+            | round(3)
+          }}    
+
+      - name: Warmteprijs V4
+        unique_id: warmteprijs_v4
+        unit_of_measurement: EUR/kWh_warmte
+        state: >
+          {{ states('sensor.warmteprijs_airco_v4') }}
+
+      - name: Beste Verwarming V4
+        unique_id: beste_verwarming_v4
+        state: >
+          {% set airco = states('sensor.warmteprijs_airco_v4')|float(99) %}
+          {% set gas = states('sensor.warmteprijs_gas_v4')|float(99) %}
+
+          {% if airco < gas %}
+            Airco
+          {% else %}
+            Gas
+          {% endif %}}
+
+###############################################################################
+# KOSTEN
+###############################################################################
+
+      - name: Kosten Per Uur V4
+        unique_id: kosten_per_uur_v4
+        unit_of_measurement: EUR
+        state: >
+          {{
+            (
+              states('sensor.huidig_stroomverbruik_v4')|float(0)
+              /1000
+            )
+            *
+            states('sensor.stroomprijs_actueel_v4')|float(0)
+          }}
+
+      - name: Servers Kosten Vandaag V4
+        unique_id: servers_kosten_vandaag_v4
+        unit_of_measurement: EUR
+        state: >
+          {{
+            (
+              states('sensor.servers_kwh_vandaag')|float(0)
+              *
+              states('sensor.stroomprijs_actueel_v4')|float(0)
+            ) | round(2)
+          }}
+
+      - name: Servers Kosten Maand V4
+        unique_id: servers_kosten_maand_v4
+        unit_of_measurement: EUR
+        state: >
+          {{
+            (
+              states('sensor.servers_kwh_maand')|float(0)
+              *
+              states('sensor.stroomprijs_actueel_v4')|float(0)
+            ) | round(2)
+          }}
+
+      - name: Audio Video Kosten Vandaag V4
+        unique_id: audio_video_kosten_vandaag_v4
+        unit_of_measurement: EUR
+        state: >
+          {{
+            (
+              states('sensor.audio_video_kwh_vandaag')|float(0)
+              *
+              states('sensor.stroomprijs_actueel_v4')|float(0)
+            ) | round(2)
+          }}
+
+      - name: Audio Video Kosten Maand V4
+        unique_id: audio_video_kosten_maand_v4
+        unit_of_measurement: EUR
+        state: >
+          {{
+            (
+              states('sensor.audio_video_kwh_maand')|float(0)
+              *
+              states('sensor.stroomprijs_actueel_v4')|float(0)
+            ) | round(2)
+          }}
+
+###############################################################################
+# UTILITY METERS
+###############################################################################
+
+utility_meter:
+
+  airco_dag_v4:
+    source: sensor.airco_verbruik_v4
+    cycle: daily
+
+  airco_maand_v4:
+    source: sensor.airco_verbruik_v4
+    cycle: monthly
+
+  stroom_dag_v4:
+    source: sensor.airco_verbruik_v4
+    cycle: daily
+
+  stroom_maand_v4:
+    source: sensor.airco_verbruik_v4
+    cycle: monthly
+
+  servers_kwh_vandaag:
+    source: sensor.servers_energie
+    cycle: daily
+
+  servers_kwh_maand:
+    source: sensor.servers_energie
+    cycle: monthly
+
+  audio_video_kwh_vandaag:
+    source: sensor.audio_video_energie
+    cycle: daily
+
+  audio_video_kwh_maand:
+    source: sensor.audio_video_energie
+    cycle: monthly
