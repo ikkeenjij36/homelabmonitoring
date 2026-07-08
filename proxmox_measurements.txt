@@ -1,0 +1,9 @@
+Result: _result
+Table: keys: []
+         _value:string
+----------------------
+             blockstat
+               cpustat
+                memory
+                  nics
+                system

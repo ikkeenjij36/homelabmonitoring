@@ -1,0 +1,11 @@
+Result: _result
+Table: keys: []
+         _value:string
+----------------------
+                   cpu
+                  disk
+                diskio
+                   mem
+                   net
+             processes
+                system
